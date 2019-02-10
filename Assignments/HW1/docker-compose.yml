@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+        
+    webserver1:
+        image: nginx
+        hostname: webserver1
+        volumes:
+            - ./ACT1/www:/usr/share/nginx/html
+
+    webserver2:
+        image: nginx
+        hostname: webserver2
+        volumes:
+            - ./ACT3/www:/usr/share/nginx/html
+
+    loadbalancer:
+        image: nginx
+        hostname: loadbalancer
+        ports:
+            - "8081:8080"
+        links:
+            - webserver1
+            - webserver2
+
+    cache:
+        image: nginx
+        hostname: cacheserver
+        ports:
+            - "8080:80"
+        links:
+            - webserver1
+            - webserver2
+        volumes:
+            - ./ACT2/nginx.conf:/etc/nginx/nginx.conf
